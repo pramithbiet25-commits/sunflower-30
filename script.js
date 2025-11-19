@@ -50,15 +50,22 @@ Forever Yours,
 Param ✨`;
 
 /* --- APP LOGIC --- */
-let currentView = 'view-countdown';
+let currentView = 'view-countdown'; // START AT COUNTDOWN
 let quizIndex = 0;
 let photoIndex = 0;
 const bgMusic = document.getElementById('bg-music');
 
+// AUTO PLAY ON FIRST CLICK (Anywhere)
+document.body.addEventListener('click', function() {
+    if (bgMusic.paused) { bgMusic.play(); }
+}, { once: true });
+
+// COUNTDOWN & REDIRECT LOGIC
 function updateCountdown() {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
+    // IF DATE IS REACHED OR PASSED
     if (distance < 0) {
         if (currentView === 'view-countdown') {
             document.getElementById('view-countdown').classList.remove('active');
@@ -108,15 +115,9 @@ function switchView(id) {
 }
 
 function startJourney() {
-    // Music play logic
-    bgMusic.volume = 1.0;
-    bgMusic.play().then(() => {
-        console.log("Music playing!");
-    }).catch(error => {
-        console.log("Auto-play blocked: " + error);
-    });
-    
+    if (bgMusic.paused) { bgMusic.play().catch(e => console.log("Audio wait")); }
     document.getElementById('sound-btn').style.opacity = 1;
+    
     loadQuestion();
     switchView('view-quiz');
 }
@@ -170,17 +171,15 @@ function goToGallery() {
     switchView('view-photos');
 }
 
-// --- PHOTO STACK LOGIC (FIXED) ---
+// --- PHOTO STACK LOGIC ---
 function initPhotoStack() {
     const container = document.getElementById('stack-container');
     container.innerHTML = '';
     
-    // Stack photo 1 on top (highest Z-index)
     photoData.forEach((photo, i) => {
         const card = document.createElement('div');
         card.className = 'stack-item';
         card.id = `photo-${i}`;
-        
         card.style.zIndex = photoData.length - i; 
         
         const rot = (Math.random() * 10) - 5;
