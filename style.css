@@ -32,8 +32,8 @@ body {
     pointer-events: none; z-index: 2;
 }
 
-/* HEART RAIN */
-.heart-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+/* HEART RAIN - Z-index fixed so it shows behind content but over background */
+.heart-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
 .falling-heart {
     position: absolute; top: -10%;
     color: #ff6b81; opacity: 0.6;
@@ -125,7 +125,8 @@ body {
 
 /* --- LETTER --- */
 .letter-wrapper { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-#view-letter { background-color: #F8E7EE; } 
+/* Semi-transparent background for letter so rain shows through */
+#view-letter { background-color: rgba(255, 240, 245, 0.85); } 
 
 .letter-paper {
     background: #fff; padding: 40px; width: 100%; max-width: 600px; height: 75vh;
