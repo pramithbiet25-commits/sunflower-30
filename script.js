@@ -17,21 +17,20 @@ const quizData = [
     { q: "Will you marry me?", o: ["Yes!", "Of course!", "Definetly Yes!", "Forever Yes!"], a: [0,1,2,3] } 
 ];
 
-// Photo Gallery Data
+// Photo Data (Flat paths)
 const photoData = [
-    { src: "images/photo1.jpg", cap: "The Beginning" },
-    { src: "images/photo2.jpg", cap: "Pure Happiness" },
-    { src: "images/photo3.jpg", cap: "Adventures" },
-    { src: "images/photo4.jpg", cap: "Us" },
-    { src: "images/photo5.jpg", cap: "Date Night" },
-    { src: "images/photo6.jpg", cap: "Silly Moments" },
-    { src: "images/photo7.jpg", cap: "Your Smile" },
-    { src: "images/photo8.jpg", cap: "My Favorite View" },
-    { src: "images/photo9.jpg", cap: "Best Friends" },
-    { src: "images/photo10.jpg", cap: "Forever" }
+    { src: "photo1.jpg", cap: "My Princess" },
+    { src: "photo2.jpg", cap: "The Beginning" },
+    { src: "photo3.jpg", cap: "Gorgeous" },
+    { src: "photo4.jpg", cap: "Your Smile" },
+    { src: "photo5.jpg", cap: "Date Eve" },
+    { src: "photo6.jpg", cap: "Saree Moments" },
+    { src: "photo7.jpg", cap: "Radhe Radhe" },
+    { src: "photo8.jpg", cap: "Princess" },
+    { src: "photo9.jpg", cap: "Spicy 🔥" },
+    { src: "photo10.jpg", cap: "Forever" }
 ];
 
-// Letter Content
 const letterText = `Boo Boo,
 Happy Birthday 🌻
 
@@ -51,17 +50,15 @@ Forever Yours,
 Param ✨`;
 
 /* --- APP LOGIC --- */
-let currentView = 'view-countdown'; // Start at Countdown
+let currentView = 'view-countdown';
 let quizIndex = 0;
 let photoIndex = 0;
 const bgMusic = document.getElementById('bg-music');
 
-// --- COUNTDOWN LOGIC ---
 function updateCountdown() {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
-    // If countdown is finished
     if (distance < 0) {
         if (currentView === 'view-countdown') {
             document.getElementById('view-countdown').classList.remove('active');
@@ -71,13 +68,11 @@ function updateCountdown() {
         return;
     }
 
-    // Calculate Time
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Update DOM
     document.getElementById("d").innerText = String(days).padStart(2, '0');
     document.getElementById("h").innerText = String(hours).padStart(2, '0');
     document.getElementById("m").innerText = String(minutes).padStart(2, '0');
@@ -85,10 +80,8 @@ function updateCountdown() {
     
     requestAnimationFrame(updateCountdown);
 }
-// Start Countdown
 updateCountdown();
 
-// --- HEART RAIN ANIMATION ---
 function startHeartRain() {
     const container = document.getElementById('heart-rain');
     setInterval(() => {
@@ -106,7 +99,6 @@ function startHeartRain() {
 }
 startHeartRain();
 
-// --- NAVIGATION ---
 function switchView(id) {
     document.getElementById(currentView).classList.remove('active');
     setTimeout(() => {
@@ -116,13 +108,19 @@ function switchView(id) {
 }
 
 function startJourney() {
-    bgMusic.play().catch(() => console.log("Audio blocked"));
+    // Music play logic
+    bgMusic.volume = 1.0;
+    bgMusic.play().then(() => {
+        console.log("Music playing!");
+    }).catch(error => {
+        console.log("Auto-play blocked: " + error);
+    });
+    
     document.getElementById('sound-btn').style.opacity = 1;
     loadQuestion();
     switchView('view-quiz');
 }
 
-// --- QUIZ LOGIC ---
 function loadQuestion() {
     const data = quizData[quizIndex];
     document.getElementById('q-text').innerText = data.q;
@@ -163,7 +161,6 @@ function handleAnswer(btn, selectedIndex, correctData) {
     }
 }
 
-// --- LETTER & GALLERY LOGIC ---
 function showLetter() {
     document.getElementById('letter-content').innerHTML = letterText;
     switchView('view-letter');
@@ -172,23 +169,31 @@ function goToGallery() {
     initPhotoStack();
     switchView('view-photos');
 }
+
+// --- PHOTO STACK LOGIC (FIXED) ---
 function initPhotoStack() {
     const container = document.getElementById('stack-container');
     container.innerHTML = '';
-    photoData.slice().reverse().forEach((photo, i) => {
-        const realIndex = photoData.length - 1 - i;
+    
+    // Stack photo 1 on top (highest Z-index)
+    photoData.forEach((photo, i) => {
         const card = document.createElement('div');
         card.className = 'stack-item';
-        card.id = `photo-${realIndex}`;
-        card.style.zIndex = realIndex + 10;
+        card.id = `photo-${i}`;
+        
+        card.style.zIndex = photoData.length - i; 
+        
         const rot = (Math.random() * 10) - 5;
         card.style.transform = `rotate(${rot}deg)`;
+        
         card.innerHTML = `<img src="${photo.src}" alt="Memory"><div class="stack-caption">${photo.cap}</div>`;
         container.appendChild(card);
     });
+    
     photoIndex = 0;
     updateCounter();
 }
+
 function nextPhoto() {
     if (photoIndex < photoData.length) {
         const card = document.getElementById(`photo-${photoIndex}`);
@@ -197,6 +202,7 @@ function nextPhoto() {
         updateCounter();
     }
 }
+
 function prevPhoto() {
     if (photoIndex > 0) {
         photoIndex--;
@@ -205,11 +211,13 @@ function prevPhoto() {
         updateCounter();
     }
 }
+
 function updateCounter() {
     let display = photoIndex + 1;
     if (display > photoData.length) display = photoData.length;
     document.getElementById('counter').innerText = `${display} / ${photoData.length}`;
 }
+
 document.getElementById('sound-btn').addEventListener('click', function() {
     if (bgMusic.paused) { bgMusic.play(); this.style.opacity = 1; }
     else { bgMusic.pause(); this.style.opacity = 0.5; }
