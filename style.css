@@ -32,7 +32,7 @@ body {
     pointer-events: none; z-index: 2;
 }
 
-/* HEART RAIN - Z-index fixed so it shows behind content but over background */
+/* HEART RAIN */
 .heart-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
 .falling-heart {
     position: absolute; top: -10%;
@@ -125,7 +125,6 @@ body {
 
 /* --- LETTER --- */
 .letter-wrapper { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-/* Semi-transparent background for letter so rain shows through */
 #view-letter { background-color: rgba(255, 240, 245, 0.85); } 
 
 .letter-paper {
@@ -169,5 +168,5 @@ body {
 .nav-circle:hover { border-color: black; color: black; }
 #counter { font-family: var(--font-body); font-size: 0.8rem; letter-spacing: 2px; color: black; }
 
-.sound-control { position: absolute; top: 30px; right: 30px; z-index: 50; opacity: 0.5; cursor: pointer; transition: opacity 0.3s; }
+.sound-control { position: absolute; top: 30px; right: 30px; z-index: 50; opacity: 1; cursor: pointer; transition: opacity 0.3s; }
 .sound-control:hover { opacity: 1; }
